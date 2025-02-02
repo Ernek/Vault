@@ -1,8 +1,6 @@
-# React + Vite
+# Vault App 
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+App to store friends and family records of significant things shared amongst its members for posterity or to remember and use other times.  
+Includes functionality to add food and drink recipes, board games played and books read. 
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
