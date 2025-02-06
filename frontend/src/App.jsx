@@ -5,27 +5,26 @@ import './App.css'
 import NavBar from "./components/NavBar.jsx";
 import Home from "./components/Home.jsx";
 import FoodElement from './components/FoodElement.jsx';
+import Item from "./components/Item.jsx";
 import AddItem from './components/AddItem.jsx';
 import Search from './components/Search.jsx';
+import axios from 'axios';
 
 function App() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [food, setFood] = useState([]);
+  // const [isLoading, setIsLoading] = useState(true);
+  const [recipes, setRecipes] = useState([]);
 
-  // useEffect(() => {
-  //   async function getFood() {
-  //     let food = await SnackOrBoozeApi.getFood();
-  //     setFood(food);
-  //     setIsLoading(false);
-  //   }
-  //   getSnacks();
-  // }, []);
-
-  // setIsLoading(False);
-
-  // if (isLoading) {
-  //   return <p>Loading &hellip;</p>;
-  // }
+  useEffect(() => {
+    async function fetchRecipes() {
+      try {
+        const response = await axios.get("http://localhost:5000/api/recipes");
+        setRecipes(response.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchRecipes(); // Call the async function 
+    }, []);
 
   return (
     <>
@@ -33,12 +32,10 @@ function App() {
       <NavBar />
       <main>
         <Routes>
-          <Route path="/" element={<Home />} />
-        </Routes>
-        <Routes>
-          <Route path="/food" element={<FoodElement />} />
-        </Routes>
-        <Routes>
+          <Route path="/" element={<Home recipes={recipes} />} />
+          <Route path="/food" element={<FoodElement recipes={recipes} />} />
+          <Route path="/food/:id" element={<Item items={recipes} cantFind="/food" />} />
+          <Route path="/add-item" element={<AddItem setRecipes={setRecipes} />} />
           <Route path="/search" element={<Search />} />
         </Routes>
       </main>

@@ -1,19 +1,25 @@
 import React from "react";
-import {Card, CardBody, CardTitle, CardText } from "reactstrap";
+import { Link } from "react-router-dom";
+import {Card, CardBody, CardTitle,    
+        ListGroup, ListGroupItem} from "reactstrap";
 import "./Element.css";
 
-function Element(){
+function Element({ recipes }){
     return(
         <section className="element-height-container">
             <div className="col-md-4-container">
             <Card>
                 <CardBody>
                     <CardTitle className="font-weight-bold text-center"> 
-                        Element
+                        Recipes
                     </CardTitle>
-                    <CardText>
-                        Text
-                    </CardText>
+                    <ListGroup>
+                    {recipes.map(item => (
+                        <Link to={`${item.id}`} key={item.id}>
+                        <ListGroupItem>{item.name}</ListGroupItem>
+                        </Link>
+                    ))}
+                    </ListGroup>
                 </CardBody>
             </Card>
             </div>

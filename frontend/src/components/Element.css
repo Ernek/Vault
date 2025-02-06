@@ -1,3 +1,19 @@
+/* Parent container that takes full viewport height and centers content */
+.element-height-container {
+    display: flex;
+    justify-content: center; /* Horizontally center the content */
+    align-items: flex-start; /* Vertically center the content */
+    height: auto; /* No need for full height, just space for content */
+    margin-top: 20px; /* Add spacing below the NavBar (adjust this based on your NavBar height) */
+}
+
+/* Container for the col-md-4 content */
+.col-md-4-container {
+    /* margin-top: 20px; Adds some spacing above the col-md-4 */
+    width: auto; /* Let the width be determined by content */
+    max-width: 500px; /* Max width to limit it */
+}
+
 .card {
     background-color: #101010d1;
     color: #f0f2f5;
@@ -10,6 +26,7 @@
     margin-top: 1rem;
     border-left: 5px dotted;
     color: white;
+    text-decoration: none;
 }
 
 .list-group a:not(:last-of-type) li {
@@ -20,6 +37,8 @@
     text-decoration: none;
     border-left-style: solid;
     border-left-width: 3px;
+    font-weight: bold;
+
 }
 
 .list-group a:hover li {
@@ -29,6 +48,8 @@
 .list-group-item {
     background-color: transparent;
     font-weight: bold;
+    color: white;
+    text-decoration: none; 
 }
 
 .list-group-item:hover {
@@ -39,20 +60,4 @@
     border: 20px solid #101010d1;
     box-shadow: inset 0 0 0 10px #ffffff;
     box-sizing: border-box;
-}
-
-/* Container for the col-md-4 content */
-.col-md-4-container {
-    /* margin-top: 20px; Adds some spacing above the col-md-4 */
-    width: auto; /* Let the width be determined by content */
-    max-width: 500px; /* Max width to limit it */
-}
-
-/* Parent container that takes full viewport height and centers content */
-.element-height-container {
-    display: flex;
-    justify-content: center; /* Horizontally center the content */
-    align-items: flex-start; /* Vertically center the content */
-    height: auto; /* No need for full height, just space for content */
-    margin-top: 20px; /* Add spacing below the NavBar (adjust this based on your NavBar height) */
 }

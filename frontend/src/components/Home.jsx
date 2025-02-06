@@ -2,7 +2,7 @@ import React from "react";
 import { Card, CardBody, CardTitle } from "reactstrap";
 import '../App.css';
 
-function Home() {
+function Home({recipes}) {
   return (
     <section className="full-height-section">
       <Card>
@@ -12,7 +12,7 @@ function Home() {
               Welcome to your group's Vault!
             </h3>
           </CardTitle>
-          <p>There are ITEMS for you to check!</p>
+          <p>There are {recipes.length} recipes saved for you to check!</p>
         </CardBody>
       </Card>
     </section>

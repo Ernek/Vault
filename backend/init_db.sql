@@ -12,9 +12,9 @@ CREATE DATABASE foodie;
 CREATE TABLE recipes (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
-    image TEXT NOT NULL,
-    ingredients TEXT NOT NULL,
-    description TEXT NOT NULL
+    image TEXT,
+    ingredients TEXT,
+    description TEXT
 );
 
 -- Insert some sample data
