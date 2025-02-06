@@ -13,12 +13,9 @@ function NavBar() {
 
         <Nav className="ml-auto" navbar>
           <NavItem>
-            <NavLink to="/food">Food</NavLink>
+            <NavLink to="/food">Our Recipes</NavLink>
           </NavItem>
-          <NavItem>
-            <NavLink to="/drinks">Drinks</NavLink>
-          </NavItem>
-          <NavItem>
+          {/* <NavItem>
             <NavLink to="/boardgames">BoardGames</NavLink>
           </NavItem>
           <NavItem>
@@ -26,9 +23,12 @@ function NavBar() {
           </NavItem>
           <NavItem>
             <NavLink to="/books">Books</NavLink>
+          </NavItem> */}
+          <NavItem>
+            <NavLink to="/add-item">Add Recipe</NavLink>
           </NavItem>
           <NavItem>
-            <NavLink to="/add-item">Add Item</NavLink>
+            <NavLink to="/search">Search</NavLink>
           </NavItem>
         </Nav>
       </Navbar>

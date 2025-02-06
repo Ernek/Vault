@@ -40,3 +40,17 @@
 .read-the-docs {
   color: #888;
 }
+
+/* Ensures the section takes up the full viewport height */
+.full-height-section {
+  height: calc(100vh - 56px); /* 56px accounts for the typical NavBar height */
+  display: flex;
+  justify-content: center; /* Center the content horizontally */
+  align-items: center; /* Center the content vertically */
+}
+
+/* Optional: If you want to ensure the content is centered in the section */
+.card-container {
+  width: 100%;
+  max-width: 500px; /* Adjust to your preferred max width */
+}

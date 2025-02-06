@@ -1,0 +1,72 @@
+/* Style for the search container
+.search-container {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+  } */
+/* Styling for the Search container */
+.search-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  
+  /* Styling for the search form */
+.search-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px; /* Add some space below the search bar */
+  }
+  
+  /* Style for the input field */
+  .search-input {
+    width: 250px;
+    padding: 10px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  /* Style for the search button */
+  .search-button {
+    padding: 10px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  /* Add a hover effect for the button */
+  .search-button:hover {
+    background-color: #45a049;
+  }
+
+  /* Style for displaying the recipe results */
+.recipe-results {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  /* Style for individual recipe item */
+  .recipe-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+    width: 300px;
+    text-align: center;
+  }
+  
+  /* Style for the recipe image */
+  .recipe-image {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin-bottom: 10px;
+  }
