@@ -14,9 +14,7 @@ function Search(){
     const [addedRecipes, setAddedRecipes] = useState([]);
 
     const placeholderText = "Search recipe by type of food, or comma separated ingredients"; // Placeholder text
-    const API_KEY = '0ab4c6cfe91942e993dd97a0422313f0'; // Replace with your Spoonacular API Key
     
-    // const API_KEY = process.env.SPOONACULAR_API_KEY; // Use key from Render env vars
     // Fetch existing recipes from the database when the component mounts
     useEffect(() => {
       const fetchAddedRecipes = async () => {
@@ -37,23 +35,35 @@ function Search(){
     const handleSearchChange = (event) => {
         setSearchQuery(event.target.value); // Update the search query as the user types
     };
-
-    // Function to fetch ingredients for a specific recipe
+    // NEW: Fetch from backend instead of Spoonacular directly
     const fetchIngredients = async (recipeId) => {
-        try {
-          const response = await axios.get(
-            `https://api.spoonacular.com/recipes/${recipeId}/ingredientWidget.json`,
-            { params: { apiKey: API_KEY } }
-          );
+      try {
+        const response = await axios.get(`https://vault-g3r4.onrender.com/api/spoonacular/ingredients`, {
+            params: { recipeId },
+        });
+    
+        return response.data.ingredients; // Now using backend proxy
+      } catch (error) {
+        console.error(`Error fetching ingredients for recipe ${recipeId}:`, error);
+        return "Ingredients not available";
+      }
+    };
+    // // Function to fetch ingredients for a specific recipe
+    // const fetchIngredients = async (recipeId) => {
+    //     try {
+    //       const response = await axios.get(
+    //         `https://api.spoonacular.com/recipes/${recipeId}/ingredientWidget.json`,
+    //         { params: { apiKey: API_KEY } }
+    //       );
       
-          // Extract ingredient names as a comma-separated list
-          const ingredientsList = response.data.ingredients.map(ingredient => ingredient.name).join(", ");
-          return ingredientsList;
-        } catch (error) {
-          console.error(`Error fetching ingredients for recipe ${recipeId}:`, error);
-          return "Ingredients not available";
-        }
-      };
+    //       // Extract ingredient names as a comma-separated list
+    //       const ingredientsList = response.data.ingredients.map(ingredient => ingredient.name).join(", ");
+    //       return ingredientsList;
+    //     } catch (error) {
+    //       console.error(`Error fetching ingredients for recipe ${recipeId}:`, error);
+    //       return "Ingredients not available";
+    //     }
+    //   };
 
       // Function to handle form submission and call Spoonacular API
     const handleSearchSubmit = async (event) => {
@@ -66,16 +76,20 @@ function Search(){
       setWarning(null); // Reset warning on new search
       
       try {
-        // Make the API request to Spoonacular for recipes based on the search query
-        const response = await axios.get(`https://api.spoonacular.com/recipes/complexSearch`, {
-          params: {
-            query: searchQuery, // Recipe name or ingredients
-            number: 3,           // Number of recipes to return
-            sort: "random",
-            addRecipeInformation: true,
-            apiKey: API_KEY,     // Your Spoonacular API key
-          },
+        // NEW: Fetch from backend instead of Spoonacular directly
+        const response = await axios.get(`https://vault-g3r4.onrender.com/api/spoonacular/recipes`, {
+          params: { query: searchQuery },
         });
+        // // Make the API request to Spoonacular for recipes based on the search query
+        // const response = await axios.get(`https://api.spoonacular.com/recipes/complexSearch`, {
+        //   params: {
+        //     query: searchQuery, // Recipe name or ingredients
+        //     number: 3,           // Number of recipes to return
+        //     sort: "random",
+        //     addRecipeInformation: true,
+        //     apiKey: API_KEY,     // Your Spoonacular API key
+        //   },
+        // });
         if (!response.data.results || response.data.results.length === 0) {
             setRecipes([]);  // Explicitly set an empty array to trigger re-render
             showWarning("No recipes found for your search. Try comma separated ingredients i.e potatoes,garlic OR different food type i.e pasta")

@@ -46,6 +46,64 @@ const createTable = async () => {
   }
 };
 
+const axios = require("axios");
+
+// Fetch ingredients for a specific recipe from Spoonacular (Proxy route)
+app.get('/api/spoonacular/ingredients', async (req, res) => {
+  const { recipeId } = req.query;
+  const API_KEY = process.env.SPOONACULAR_API_KEY; // Secure API Key
+
+  if (!recipeId) {
+      return res.status(400).json({ error: "Recipe ID is required" });
+  }
+
+  try {
+      const response = await axios.get(`https://api.spoonacular.com/recipes/${recipeId}/ingredientWidget.json`, {
+          params: { apiKey: API_KEY },
+          headers: {
+              "User-Agent": "Vault",
+              "Referer": "https://vault-1-0doa.onrender.com"
+          }
+      });
+
+      // Extract ingredient names as a comma-separated list
+      const ingredientsList = response.data.ingredients.map(ingredient => ingredient.name).join(", ");
+
+      res.json({ ingredients: ingredientsList });
+  } catch (error) {
+      console.error(`❌ Error fetching ingredients for recipe ${recipeId}:`, error);
+      res.status(500).json({ error: "Ingredients not available" });
+  }
+});
+
+
+// Fetch recipes from Spoonacular API (Proxy route)
+app.get('/api/spoonacular/recipes', async (req, res) => {
+    const { query } = req.query;
+    const API_KEY = process.env.SPOONACULAR_API_KEY; // Use environment variable
+
+    try {
+        const response = await axios.get(`https://api.spoonacular.com/recipes/complexSearch`, {
+            params: {
+                query,
+                number: 3,
+                sort: "random",
+                addRecipeInformation: true,
+                apiKey: API_KEY
+            },
+            headers: {
+                "User-Agent": "Vault",
+                "Referer": "https://vault-1-0doa.onrender.com"
+            }
+        });
+
+        res.json(response.data);
+    } catch (error) {
+        console.error("❌ Error fetching Spoonacular data:", error);
+        res.status(500).json({ error: "Failed to fetch data from Spoonacular API" });
+    }
+});
+
 
 app.get('/api/recipes', async (req, res) => {
   try {
