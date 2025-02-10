@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {Card, CardBody, CardTitle, CardText } from "reactstrap";
 import './Search.css';
 import axios from 'axios';
@@ -10,9 +10,26 @@ function Search(){
     const [loading, setLoading] = useState(false); // State to handle loading state
     const [error, setError] = useState(null); // State for handling errors
     const [warning, setWarning] = useState(null); // State for warning message
+    const [message, setMessage] = useState('');
+    const [addedRecipes, setAddedRecipes] = useState([]);
 
     const placeholderText = "Search recipe by type of food, or comma separated ingredients"; // Placeholder text
     const API_KEY = '0ab4c6cfe91942e993dd97a0422313f0'; // Replace with your Spoonacular API Key
+
+    // Fetch existing recipes from the database when the component mounts
+    useEffect(() => {
+      const fetchAddedRecipes = async () => {
+        try {
+          const response = await axios.get("http://localhost:5000/api/recipes");
+          const existingTitles = response.data.map(recipe => recipe.name);
+          setAddedRecipes(existingTitles);
+        } catch (error) {
+          console.error("Error fetching added recipes:", error);
+        }
+      };
+
+      fetchAddedRecipes();
+    }, []);
 
     // Handle change in the search bar
     const handleSearchChange = (event) => {
@@ -29,14 +46,13 @@ function Search(){
       
           // Extract ingredient names as a comma-separated list
           const ingredientsList = response.data.ingredients.map(ingredient => ingredient.name).join(", ");
-      
           return ingredientsList;
         } catch (error) {
           console.error(`Error fetching ingredients for recipe ${recipeId}:`, error);
           return "Ingredients not available";
         }
       };
-    
+
       // Function to handle form submission and call Spoonacular API
     const handleSearchSubmit = async (event) => {
       event.preventDefault();
@@ -65,9 +81,9 @@ function Search(){
             // Fetch ingredients for each recipe and store them in state
             const recipesWithIngredients = await Promise.all(
                 response.data.results.map(async (recipe) => {
-                    const ingredients = await fetchIngredients(recipe.id);
-              return { ...recipe, ingredients }; // Store ingredients inside the recipe object
-            })
+                  const ingredients = await fetchIngredients(recipe.id);
+                  return { ...recipe, ingredients }; // Store ingredients inside the recipe object
+                })
             );
             setRecipes(recipesWithIngredients); // Set the recipes data
             setWarning(null); // Clear the warning if recipes are found
@@ -90,7 +106,35 @@ function Search(){
       return htmlString.replace(/<a[^>]*>(.*?)<\/a>/g, '$1'); // Remove <a> tags and preserve inner text
     };
 
+    const handleAddRecipe = async (recipe) => {
+      // Check if the recipe has already been added
+      if (addedRecipes.includes(recipe.title)) {
+        return setMessage(`${recipe.title} has already been added!`);
+      }
 
+      const newRecipe = {
+        name: recipe.title,
+        image: recipe.image,
+        ingredients: recipe.ingredients || "N/A",
+        description: removeLinks(recipe.summary).replace(/<[^>]*>/g, ""),
+        preparationtime: `${recipe.readyInMinutes} minutes`
+      };
+      console.log(newRecipe)
+      try {
+        const response = await axios.post("http://localhost:5000/api/recipes", newRecipe);
+        if (response.status === 201) {
+          setMessage(`${recipe.title} has been added successfully!`);
+          // Update state to include the new recipe, add new recipe to list and mark it as added
+          setAddedRecipes((prevAdded) => [...prevAdded, recipe.title]);
+        } else {
+          setMessage("Failed to add the recipe. Please try again.");
+        }
+      } catch (error) {
+        console.error("Error adding recipe:", error);
+        setMessage("An error occurred while adding the recipe.");
+      }
+    };
+    
     return(
         <div className="search-container">
         <form onSubmit={handleSearchSubmit} className="search-form">
@@ -112,6 +156,7 @@ function Search(){
 
         {/* Display warning message */}
         {warning && <p className="warning-text">{warning}</p>}
+        {message && <p className="message-text">{message}</p>}
 
         {/* Display recipe results below the search bar */}
         <div className="recipe-results-container">
@@ -120,11 +165,20 @@ function Search(){
               <img src={recipe.image} alt={recipe.title} className="recipe-image" />
               <h3>{recipe.title}</h3>
               <p><strong>Ingredients:</strong> {recipe.ingredients}</p>
+              <p><strong>Preparation Time:</strong> {recipe.readyInMinutes} minutes</p>
             
             {/* Render the summary with HTML content */}
             <div className="recipe-summary"
               dangerouslySetInnerHTML={{ __html: removeLinks(recipe.summary) }}
             />
+            {/* + Add Button */}
+            <button 
+              onClick={() => handleAddRecipe(recipe)} 
+              disabled={addedRecipes.includes(recipe.title)}
+              className={addedRecipes.includes(recipe.title) ? "disabled-button" : ""}
+            >
+              {addedRecipes.includes(recipe.title) ? "Already Added" : "+ Add"}
+            </button>
             </div>
           ))}
         </div>

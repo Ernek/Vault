@@ -8,15 +8,19 @@ const Recipe = sequelize.define("Recipe", {
   },
   image: {
     type: DataTypes.TEXT,
-    allowNull: false,
+    allowNull: true,
   },
   ingredients: {
     type: DataTypes.TEXT,
-    allowNull: false,
+    allowNull: true,
   },
   description: {
     type: DataTypes.TEXT,
-    allowNull: false,
+    allowNull: true,
+  },
+  preparationtime: {
+    type: DataTypes.TEXT,
+    allowNull: true,
   },
 });
 

@@ -7,7 +7,7 @@ function NavBar() {
   return (
     <div>
       <Navbar expand="md">
-        <NavLink exact to="/" className="navbar-brand">
+        <NavLink to="/" className="navbar-brand">
           Vault
         </NavLink>
 

@@ -11,8 +11,10 @@ function AddItem({ setRecipes }){
     const [image, setImage] = useState('');
     const [ingredients, setIngredients] = useState('');
     const [description, setDescription] = useState('');
+    const [preparationtime, setPreparationTime] = useState('');
     const [message, setMessage] = useState('');
-  
+    const [tags, setTags] = useState('');
+
     const handleSubmit = async (e) => {
       e.preventDefault();
        // Validate inputs
@@ -26,23 +28,27 @@ function AddItem({ setRecipes }){
           image,
           ingredients,
           description,
+          preparationtime,
+          tags
         };
     
       try {
         const response = await axios.post(
-          `http://localhost:5000/api/recipes`, // 'drinks' or 'snacks' endpoint
+          `http://localhost:5000/api/recipes`, // 'recipes' endpoint
           newItem
         );
         if (response.status === 201) {
           setMessage(`${name} has been added successfully!`);
   
           // Update the state in App.jsx
-          setRecipes((prevSnacks) => [...prevSnacks, newItem]);
+          setRecipes((prevRecipes) => [...prevRecipes, response.data.item]);
           // Reset form
           setName('');
           setImage('');
           setDescription('');
           setIngredients('');
+          setPreparationTime('');
+          setTags('');
         } else {
           setMessage('Failed to add the item. Please try again.');
         }
@@ -68,6 +74,7 @@ function AddItem({ setRecipes }){
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     required
+                    placeholder="Enter name of the recipe"
                   />
                 </div>
                 <div>
@@ -75,6 +82,7 @@ function AddItem({ setRecipes }){
                   <textarea
                     value={image}
                     onChange={(e) => setImage(e.target.value)}
+                    placeholder="Enter URL of image"
                   />
                 </div>
                 <div>
@@ -82,6 +90,7 @@ function AddItem({ setRecipes }){
                   <textarea
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
+                    placeholder="Enter description"
                   />
                 </div>
                 <div>
@@ -89,6 +98,23 @@ function AddItem({ setRecipes }){
                   <textarea
                     value={ingredients}
                     onChange={(e) => setIngredients(e.target.value)}
+                    placeholder="Enter ingredients (e.g., lamb, tomatoes)"
+                  />
+                </div>
+                <div>
+                  <label>Preparation Time:</label>
+                  <textarea
+                    value={preparationtime}
+                    onChange={(e) => setPreparationTime(e.target.value)}
+                    placeholder="Enter preparation time (e.g 40 minutes)"
+                  />
+                </div>
+                <div>
+                  <label>Tags:</label>
+                  <textarea
+                    value={tags}
+                    onChange={(e) => setTags(e.target.value)}
+                    placeholder="Enter tags (e.g., vegan, quick, healthy)"
                   />
                 </div>
                 <button type="submit">Add Item</button>

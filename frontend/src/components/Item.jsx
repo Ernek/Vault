@@ -21,6 +21,9 @@ function Item({items, cantFind }) {
           <p>
             <b>Ingredients:</b> {item.ingredients}
           </p>
+          <p>
+            <b>Preparation Time:</b> {item.preparationtime}
+          </p>
         </CardBody>
       </Card>
     </section>

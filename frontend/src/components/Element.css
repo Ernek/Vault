@@ -61,3 +61,45 @@
     box-shadow: inset 0 0 0 10px #ffffff;
     box-sizing: border-box;
 }
+
+.list-group-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 15px;
+    border-bottom: 1px solid #ddd;
+    background: black;
+}
+
+/* Tag Styling - Centering Text */
+.tag-badge {
+    color: white; /* White font */
+    padding: 4px 10px;
+    font-size: 12px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centers text inside the badge */
+    height: 22px; /* Adjusted for better vertical alignment */
+    min-width: 60px; /* Ensures a consistent size */
+    text-align: center;
+}
+
+/* Buttons Styling */
+.btn-link {
+    text-decoration: none;
+    font-size: 14px; /* Standard size */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+}
+
+/* Adjust icon size */
+.btn-link svg {
+    font-size: 14px; /* Ensures icons are the same size */
+}
+
+.btn-link:hover {
+    opacity: 0.7;
+}
