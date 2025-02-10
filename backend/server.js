@@ -4,7 +4,7 @@ const cors = require("cors");
 const bodyParser = require('body-parser');
 // const sequelize = require("./config/database");
 const recipeRoutes = require("./routes/recipeRoutes");
-const Recipe = require('./models/Recipe')
+const Recipe = require('./models/Recipe');
 const axios = require("axios");
 
 require("dotenv").config();
