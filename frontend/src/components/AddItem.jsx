@@ -34,7 +34,8 @@ function AddItem({ setRecipes }){
     
       try {
         const response = await axios.post(
-          `http://localhost:5000/api/recipes`, // 'recipes' endpoint
+          // `http://localhost:5000/api/recipes`, // 'recipes' endpoint
+          `https://vault-g3r4.onrender.com/api/recipes`, // 'recipes' endpoint 
           newItem
         );
         if (response.status === 201) {

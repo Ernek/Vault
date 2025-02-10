@@ -14,13 +14,15 @@ function Search(){
     const [addedRecipes, setAddedRecipes] = useState([]);
 
     const placeholderText = "Search recipe by type of food, or comma separated ingredients"; // Placeholder text
-    const API_KEY = '0ab4c6cfe91942e993dd97a0422313f0'; // Replace with your Spoonacular API Key
-
+    // const API_KEY = '0ab4c6cfe91942e993dd97a0422313f0'; // Replace with your Spoonacular API Key
+    
+    const API_KEY = process.env.SPOONACULAR_API_KEY; // Use key from Render env vars
     // Fetch existing recipes from the database when the component mounts
     useEffect(() => {
       const fetchAddedRecipes = async () => {
         try {
-          const response = await axios.get("http://localhost:5000/api/recipes");
+          // const response = await axios.get("http://localhost:5000/api/recipes");
+          const response = await axios.get("https://vault-g3r4.onrender.com/api/recipes");
           const existingTitles = response.data.map(recipe => recipe.name);
           setAddedRecipes(existingTitles);
         } catch (error) {
@@ -121,7 +123,8 @@ function Search(){
       };
       console.log(newRecipe)
       try {
-        const response = await axios.post("http://localhost:5000/api/recipes", newRecipe);
+        // const response = await axios.post("http://localhost:5000/api/recipes", newRecipe);
+        const response = await axios.post("https://vault-g3r4.onrender.com/api/recipes", newRecipe);
         if (response.status === 201) {
           setMessage(`${recipe.title} has been added successfully!`);
           // Update state to include the new recipe, add new recipe to list and mark it as added

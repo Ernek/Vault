@@ -19,7 +19,8 @@ function App() {
   useEffect(() => {
     async function fetchRecipes() {
       try {
-        const response = await axios.get("http://localhost:5000/api/recipes");
+        // const response = await axios.get("http://localhost:5000/api/recipes");
+        const response = await axios.get("https://vault-g3r4.onrender.com/api/recipes");
         setRecipes(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);

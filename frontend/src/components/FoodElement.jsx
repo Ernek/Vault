@@ -8,7 +8,8 @@ function FoodElement({ recipes, setRecipes }){
     useEffect(() => {
         const fetchRecipes = async () => {
             try {
-                const response = await axios.get("http://localhost:5000/api/recipes");
+                // const response = await axios.get("http://localhost:5000/api/recipes");
+                const response = await axios.get("https://vault-g3r4.onrender.com/api/recipes");
                 setRecipes(response.data); // Update state with latest database data
                 setAllRecipes(response.data); // Save full list
             } catch (error) {
@@ -26,7 +27,8 @@ function FoodElement({ recipes, setRecipes }){
             return;
         }
         try {
-            const response = await axios.get(`http://localhost:5000/api/recipes/search?tag=${searchTag}`);
+            // const response = await axios.get(`http://localhost:5000/api/recipes/search?tag=${searchTag}`);
+            const response = await axios.get(`https://vault-g3r4.onrender.com/api/recipes/search?tag=${searchTag}`);
             setRecipes(response.data);
         } catch (error) {
             console.error("Error searching recipes by tag:", error);

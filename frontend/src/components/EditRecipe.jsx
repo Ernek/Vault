@@ -12,7 +12,8 @@ function EditRecipe({ setRecipes }) {
     useEffect(() => {
         const fetchRecipe = async () => {
             try {
-                const response = await axios.get(`http://localhost:5000/api/recipes/${id}`);
+                // const response = await axios.get(`http://localhost:5000/api/recipes/${id}`);
+                const response = await axios.get(`https://vault-g3r4.onrender.com/api/recipes/${id}`);
                 setRecipe(response.data);
                 setLoading(false);
             } catch (error) {
@@ -34,7 +35,8 @@ function EditRecipe({ setRecipes }) {
         e.preventDefault();
 
         try {
-            const response = await axios.put(`http://localhost:5000/api/recipes/${id}`, recipe);
+            // const response = await axios.put(`http://localhost:5000/api/recipes/${id}`, recipe);
+            const response = await axios.put(`https://vault-g3r4.onrender.com/api/recipes/${id}`, recipe);
 
             if (response.status === 200) {
                 setMessage("Recipe updated successfully!");
