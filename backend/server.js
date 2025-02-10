@@ -14,8 +14,15 @@ app.use(express.json());
 // Middleware to parse JSON bodies
 app.use(bodyParser.json());
 
+// For local use refer to .env for the URL and the port
+// const pool = new Pool({
+//   connectionString: process.env.DATABASE_URL,
+// });
+
+// For Supabase connections
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+  connectionString: process.env.DATABASE_SUPABASE_URL, // Use environment variable
+  ssl: { rejectUnauthorized: false } // Required for Supabase
 });
 
 // Create table if it doesn't exist
@@ -35,6 +42,7 @@ const createTable = async () => {
     console.log('Database and table checked/created');
   } catch (err) {
     console.error('Error creating table:', err);
+    throw err;
   }
 };
 
@@ -166,20 +174,23 @@ app.post('/api/recipes', async (req, res) => {
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, async () => {
-  await createTable();
-  console.log(`Server running on port ${PORT}`);
-});
+// For use with local database 
+// app.listen(PORT, async () => {
+//   await createTable();
+//   console.log(`Server running on port ${PORT}`);
+// });
 
+// For use with db hosted in Supabase
+const startServer = async () => {
+  try {
+    await createTable(); // Ensure table exists before listening
+    app.listen(PORT, () => {
+      console.log(`✅ Server running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error("❌ Failed to initialize database:", error);
+    process.exit(1); // Stop server if DB setup fails
+  }
+};
 
-// app.use("/api/recipes", recipeRoutes);
-
-
-// Sync Database and Start Server
-// sequelize.sync()
-//   .then(() => {
-//     console.log("Database synced!");
-//     app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-//   })
-//   .catch((err) => console.log("Error syncing database:", err));
-
+startServer();
