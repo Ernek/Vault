@@ -1,3 +1,4 @@
+const axios = require("axios");
 const express = require("express");
 const { Pool } = require('pg');
 const cors = require("cors");
@@ -5,7 +6,6 @@ const bodyParser = require('body-parser');
 // const sequelize = require("./config/database");
 const recipeRoutes = require("./routes/recipeRoutes");
 const Recipe = require('./models/Recipe');
-const axios = require("axios");
 
 require("dotenv").config();
 
@@ -46,8 +46,6 @@ const createTable = async () => {
     throw err;
   }
 };
-
-const axios = require("axios");
 
 // Fetch ingredients for a specific recipe from Spoonacular (Proxy route)
 app.get('/api/spoonacular/ingredients', async (req, res) => {
