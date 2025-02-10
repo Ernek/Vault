@@ -36,7 +36,7 @@ function Element({ recipes, setRecipes }){
                         {item.name}
                         </Link>
                         {/* Tags with White Font */}
-                        <span className="tag-badge ms-3">({item.tags || "No tags"})</span>
+                        <span className="tag-badge ms-3">({item.tags ? item.tags.split(',').map(tag => `${tag.trim()}`).join(', ') : "No tags"})</span>
                         </div>
                         {/* Right Side: Edit and Delete Buttons */}
                         <div className="d-flex align-items-center">

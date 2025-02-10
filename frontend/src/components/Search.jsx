@@ -162,7 +162,7 @@ function Search(){
         <div className="recipe-results-container">
           {recipes.map((recipe) => (
             <div key={recipe.id} className="recipe-card">
-              <img src={recipe.image} alt={recipe.title} className="recipe-image" />
+              <img src={recipe.image} alt={recipe.title} className="recipe-image" draggable="false" />
               <h3>{recipe.title}</h3>
               <p><strong>Ingredients:</strong> {recipe.ingredients}</p>
               <p><strong>Preparation Time:</strong> {recipe.readyInMinutes} minutes</p>

@@ -4,11 +4,13 @@ import axios from "axios"
 
 function FoodElement({ recipes, setRecipes }){
     const [searchTag, setSearchTag] = useState('');
+    const [allRecipes, setAllRecipes] = useState([]); // Store all recipes for resetting
     useEffect(() => {
         const fetchRecipes = async () => {
             try {
                 const response = await axios.get("http://localhost:5000/api/recipes");
                 setRecipes(response.data); // Update state with latest database data
+                setAllRecipes(response.data); // Save full list
             } catch (error) {
                 console.error("Error fetching recipes:", error);
             }
@@ -19,8 +21,10 @@ function FoodElement({ recipes, setRecipes }){
 
     const handleTagSearch = async (e) => {
         e.preventDefault();
-        if (!searchTag) return;
-
+        if (!searchTag) {
+            setRecipes(allRecipes); // Reset if search is cleared
+            return;
+        }
         try {
             const response = await axios.get(`http://localhost:5000/api/recipes/search?tag=${searchTag}`);
             setRecipes(response.data);
@@ -38,6 +42,11 @@ function FoodElement({ recipes, setRecipes }){
             placeholder="Search by tag (e.g., vegan, quick)"
         />
         <button type="submit">Search</button>
+        {/* Reset Button */}
+        {searchTag && <button type="button" onClick={() => {
+            setSearchTag('');
+            setRecipes(allRecipes);
+        }}>Reset</button>}
     </form>
     <Element recipes={recipes} setRecipes={setRecipes} />
     </div>

@@ -48,6 +48,29 @@ app.get('/api/recipes', async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
+// Route to handle search by tags
+app.get('/api/recipes/search', async (req, res) => {
+  const { tag } = req.query;
+
+  try {
+      // Ensure case-insensitive search for tags even if they are comma-separated
+      const query = `
+          SELECT * FROM recipes 
+          WHERE tags ILIKE $1 
+             OR tags ILIKE $2
+             OR tags ILIKE $3
+             OR tags ILIKE $4;
+      `;
+      const values = [`%${tag}%`, `${tag},%`, `%,${tag}`, `%,${tag},%`];
+
+      const result = await pool.query(query, values);
+
+      res.json(result.rows);
+  } catch (error) {
+      console.error('Error fetching recipes by tag:', error);
+      res.status(500).json({ message: 'Error fetching recipes', error });
+  }
+});
 
 app.get('/api/recipes/:id', async (req, res) => {
   const { id } = req.params;
@@ -89,25 +112,6 @@ app.put('/api/recipes/:id', async (req, res) => {
   } catch (error) {
       console.error("Error updating recipe:", error);
       return res.status(500).json({ error: "Internal Server Error" });
-  }
-});
-
-app.get('/api/recipes/search', async (req, res) => {
-  const { tag } = req.query;
-
-  try {
-      const query = `
-          SELECT * FROM recipes 
-          WHERE tags ILIKE $1;
-      `;
-      const values = [`%${tag}%`];
-
-      const result = await pool.query(query, values);
-
-      res.json(result.rows);
-  } catch (error) {
-      console.error('Error fetching recipes by tag:', error);
-      res.status(500).json({ message: 'Error fetching recipes', error });
   }
 });
 
