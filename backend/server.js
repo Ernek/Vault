@@ -24,6 +24,8 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_SUPABASE_URL, // Use environment variable
   ssl: { rejectUnauthorized: false } // Required for Supabase
 });
+
+// Create users Table if not existent
 const createUsersTable = async () => {
   try {
     await pool.query(`
@@ -39,25 +41,7 @@ const createUsersTable = async () => {
     throw err;
   }
 };
-
-const createUserRecipesTable = async () => {
-  try {
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS user_recipes (
-        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-        recipe_id INTEGER REFERENCES recipes(id) ON DELETE CASCADE,
-        PRIMARY KEY (user_id, recipe_id)
-      );
-    `);
-    console.log('UserRecipes table checked/created');
-  } catch (err) {
-    console.error('Error creating user tables:', err);
-    throw err;
-  }
-};
-
-
-// Create table if it doesn't exist
+// Create recipes table if it doesn't exist
 const createRecipeTable = async () => {
   try {
     await pool.query(`
@@ -77,6 +61,88 @@ const createRecipeTable = async () => {
     throw err;
   }
 };
+// Create user_recipes Table is it doesn't exist
+const createUserRecipesTable = async () => {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS user_recipes (
+        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+        recipe_id INTEGER REFERENCES recipes(id) ON DELETE CASCADE,
+        PRIMARY KEY (user_id, recipe_id)
+      );
+    `);
+    console.log('UserRecipes table checked/created');
+  } catch (err) {
+    console.error('Error creating user tables:', err);
+    throw err;
+  }
+};
+// *****************   ROUTES  ****************** //
+
+// User Registration
+app.post('/api/register', async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const query = 'INSERT INTO users (username, password) VALUES ($1, $2) RETURNING id, username';
+    const values = [username, hashedPassword];
+    const result = await pool.query(query, values);
+
+    res.status(201).json({ message: "User registered", user: result.rows[0] });
+  } catch (error) {
+    console.error('Error registering user:', error);
+    res.status(500).json({ message: "Error registering user", error });
+  }
+});
+
+// User Login
+app.post('/api/login', async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    const result = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
+    if (result.rows.length === 0) {
+      return res.status(401).json({ message: "Invalid username or password" });
+    }
+
+    const user = result.rows[0];
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid username or password" });
+    }
+
+    const token = jwt.sign({ userId: user.id, username: user.username }, SECRET_KEY, { expiresIn: "1h" });
+
+    res.json({ message: "Login successful", token });
+  } catch (error) {
+    console.error("Error logging in:", error);
+    res.status(500).json({ message: "Error logging in", error });
+  }
+});
+
+// Middleware to Verify Token
+const authenticateToken = (req, res, next) => {
+  const token = req.headers.authorization?.split(" ")[1];
+
+  if (!token) return res.status(401).json({ message: "Unauthorized" });
+
+  jwt.verify(token, SECRET_KEY, (err, user) => {
+    if (err) return res.status(403).json({ message: "Invalid token" });
+
+    req.user = user;
+    next();
+  });
+};
+
+app.use((req, res, next) => {
+  // Allow public access only for login and register routes
+  if (req.path === "/api/login" || req.path === "/api/register") {
+    return next();
+  }
+  authenticateToken(req, res, next);
+});
 
 // Fetch ingredients for a specific recipe from Spoonacular (Proxy route)
 app.get('/api/spoonacular/ingredients', async (req, res) => {
