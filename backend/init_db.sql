@@ -29,12 +29,12 @@ CREATE TABLE IF NOT EXISTS recipes (
     tags TEXT
 );
 
--- Create usersrecipes table
-CREATE TABLE IF NOT EXISTS user_recipes (
-  user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-  recipe_id INTEGER REFERENCES recipes(id) ON DELETE CASCADE,
-  PRIMARY KEY (user_id, recipe_id)
-);
+-- -- Create usersrecipes table
+-- CREATE TABLE IF NOT EXISTS user_recipes (
+--   user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+--   recipe_id INTEGER REFERENCES recipes(id) ON DELETE CASCADE,
+--   PRIMARY KEY (user_id, recipe_id)
+-- );
 
 -- Insert some sample data
 -- INSERT INTO users (username, password) VALUES 
@@ -58,7 +58,7 @@ INSERT INTO recipes (name, image, ingredients, description, preparationtime, tag
  '45 minutes',
  'vegan');
 
-INSERT INTO user_recipes (user_id, recipe_id) VALUES
-(1,1),
-(1,2),
-(2,2);
+-- INSERT INTO user_recipes (user_id, recipe_id) VALUES
+-- (1,1),
+-- (1,2),
+-- (2,2);

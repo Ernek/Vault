@@ -48,24 +48,7 @@ function Search(){
         return "Ingredients not available";
       }
     };
-    // // Function to fetch ingredients for a specific recipe
-    // const fetchIngredients = async (recipeId) => {
-    //     try {
-    //       const response = await axios.get(
-    //         `https://api.spoonacular.com/recipes/${recipeId}/ingredientWidget.json`,
-    //         { params: { apiKey: API_KEY } }
-    //       );
-      
-    //       // Extract ingredient names as a comma-separated list
-    //       const ingredientsList = response.data.ingredients.map(ingredient => ingredient.name).join(", ");
-    //       return ingredientsList;
-    //     } catch (error) {
-    //       console.error(`Error fetching ingredients for recipe ${recipeId}:`, error);
-    //       return "Ingredients not available";
-    //     }
-    //   };
-
-      // Function to handle form submission and call Spoonacular API
+    // Function to handle form submission and call Spoonacular API
     const handleSearchSubmit = async (event) => {
       event.preventDefault();
       
@@ -80,16 +63,6 @@ function Search(){
         const response = await axios.get(`https://vault-g3r4.onrender.com/api/spoonacular/recipes`, {
           params: { query: searchQuery },
         });
-        // // Make the API request to Spoonacular for recipes based on the search query
-        // const response = await axios.get(`https://api.spoonacular.com/recipes/complexSearch`, {
-        //   params: {
-        //     query: searchQuery, // Recipe name or ingredients
-        //     number: 3,           // Number of recipes to return
-        //     sort: "random",
-        //     addRecipeInformation: true,
-        //     apiKey: API_KEY,     // Your Spoonacular API key
-        //   },
-        // });
         if (!response.data.results || response.data.results.length === 0) {
             setRecipes([]);  // Explicitly set an empty array to trigger re-render
             showWarning("No recipes found for your search. Try comma separated ingredients i.e potatoes,garlic OR different food type i.e pasta")
@@ -105,7 +78,7 @@ function Search(){
             setWarning(null); // Clear the warning if recipes are found
         }
       } catch (error) {
-        setError('Error fetching data from Spoonacular'); // Handle any errors
+        setError('Error fetching data from Spoonacular, please try another simple ingredient or food type'); // Handle any errors
         setRecipes([]); // Clear previous results in case of an error
       } finally {
         setLoading(false); // Set loading to false when request completes
