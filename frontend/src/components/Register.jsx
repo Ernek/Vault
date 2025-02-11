@@ -7,7 +7,7 @@ function Register() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-
+  const API_URL = import.meta.env.VITE_DATABASE_URL;
   const handleRegister = async () => {
     if (!username.trim() || !password.trim()) {
       setError("Username and password are required.");
@@ -15,7 +15,7 @@ function Register() {
     }
     try {
     //   await axios.post("http://localhost:5000/api/register", { username, password });
-      await axios.post("https://vault-g3r4.onrender.com/api/register", { username, password });
+      await axios.post(`${API_URL}/api/register`, { username, password });
       navigate("/"); // Redirect to login after successful registration
     } catch (error) {
       setError("Registration failed. Username may already be taken.");

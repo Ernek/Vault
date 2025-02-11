@@ -20,10 +20,28 @@ app.use(bodyParser.json());
 // });
 
 // For Supabase connections
+// const pool = new Pool({
+//   connectionString: process.env.DATABASE_SUPABASE_URL, // Use environment variable
+//   ssl: { rejectUnauthorized: false } // Required for Supabase
+// });
+
+// To include testing options 
+const isTestEnv = process.env.NODE_ENV === 'test';
+// Pick your databaseurl:
+// If it is local set variable to not enforce ssl connections
+// DATABASE_URL for local, DATABASE_SUPABASE_URL
+const databaseurl = process.env.DATABASE_URL 
+const isLocal = databaseurl?.includes("localhost") || databaseurl?.includes("127.0.0.1");
 const pool = new Pool({
-  connectionString: process.env.DATABASE_SUPABASE_URL, // Use environment variable
-  ssl: { rejectUnauthorized: false } // Required for Supabase
+  connectionString: isTestEnv
+    ? process.env.TEST_DATABASE_URL
+    : databaseurl,
+    // : process.env.DATABASE_SUPABASE_URL,
+  ssl: isTestEnv || isLocal ? false : { rejectUnauthorized: false },
 });
+
+
+
 
 // **** TABLES **** //
 // Create Tables if not existent
@@ -43,7 +61,7 @@ const createTables = async () => {
        preparationtime TEXT,
        tags TEXT
     );`
-  ]
+  ];
   try {
     for (const query of queries) {
       await pool.query(query);
@@ -321,18 +339,27 @@ const PORT = process.env.PORT || 5000;
 //   console.log(`Server running on port ${PORT}`);
 // });
 
+let server; // Store the server instance
+
 // For use with db hosted in Supabase
-const startServer = async () => {
-  try {
-    // Ensure tables exists 
-    await createTables(); 
-    app.listen(PORT, () => {
-      console.log(`✅ Server running on port ${PORT}`);
-    });
-  } catch (error) {
-    console.error("❌ Failed to initialize database:", error);
-    process.exit(1); // Stop server if DB setup fails
-  }
+const startServer = () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      await createTables(); // Ensure tables exist
+      server = app.listen(PORT, () => {
+        console.log(`✅ Server running on port ${PORT}`);
+        resolve(server); // Resolve the server once it's started
+      });
+    } catch (error) {
+      console.error("❌ Failed to initialize database:", error);
+      reject(error);
+    }
+  });
 };
 
-startServer();
+// Start the server only when not in test mode
+if (process.env.NODE_ENV !== "test") {
+  startServer();
+}
+
+module.exports = { app, pool, server, startServer };

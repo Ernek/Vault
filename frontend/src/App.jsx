@@ -16,12 +16,14 @@ function App() {
   const [recipes, setRecipes] = useState([]);
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
-  
+  // For local development 
+  const API_URL = import.meta.env.VITE_DATABASE_URL;
+
   const fetchRecipes = async () => {
     if (!user) return;  // Prevent fetching when user is not authenticated
   
     try {
-      const response = await axios.get("https://vault-g3r4.onrender.com/api/recipes", {
+      const response = await axios.get(`${API_URL}/api/recipes`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
       });
       setRecipes(response.data);
@@ -36,7 +38,7 @@ function App() {
     if (token) {
       try {
         axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-        const response = await axios.get("https://vault-g3r4.onrender.com/api/user");
+        const response = await axios.get(`${API_URL}/api/user`);
         setUser({ username: response.data.username });
       } catch (error) {
         console.error("Invalid or expired token:", error);
@@ -54,7 +56,7 @@ function App() {
   const login = async (username, password) => {
     try {
       // const response = await axios.post("http://localhost:5000/api/login", { username, password });
-      const response = await axios.post("https://vault-g3r4.onrender.com/api/login", { username, password });
+      const response = await axios.post(`${API_URL}/api/login`, { username, password });
       const token = response.data.token;
       // Store token securely
       localStorage.setItem("token", token);

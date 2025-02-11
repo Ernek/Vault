@@ -1,0 +1,16 @@
+services:
+  test_db:
+    image: postgres:latest  # Use the official PostgreSQL image
+    container_name: test_postgres_db  # Assign a name to the container
+    restart: always  # Restart if the container stops unexpectedly
+    environment:
+      POSTGRES_USER: test_user  # Username for the database
+      POSTGRES_PASSWORD: test_password  # Password for the database
+      POSTGRES_DB: test_db  # Database name
+    ports:
+      - "5434:5432"  # Host port 5433 -> Container port 5432 (default PostgreSQL port)
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U test_user -d test_db"]  # Checks if the DB is ready
+      interval: 5s
+      retries: 3
+      start_period: 8s

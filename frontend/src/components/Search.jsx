@@ -12,7 +12,8 @@ function Search(){
     const [warning, setWarning] = useState(null); // State for warning message
     const [message, setMessage] = useState('');
     const [addedRecipes, setAddedRecipes] = useState([]);
-
+    // For local development 
+    const API_URL = import.meta.env.VITE_DATABASE_URL;
     const placeholderText = "Search recipe by type of food, or comma separated ingredients"; // Placeholder text
     
     // Fetch existing recipes from the database when the component mounts
@@ -20,7 +21,7 @@ function Search(){
       const fetchAddedRecipes = async () => {
         try {
           // const response = await axios.get("http://localhost:5000/api/recipes");
-          const response = await axios.get("https://vault-g3r4.onrender.com/api/recipes");
+          const response = await axios.get(`${API_URL}/api/recipes`);
           const existingTitles = response.data.map(recipe => recipe.name);
           setAddedRecipes(existingTitles);
         } catch (error) {
@@ -38,7 +39,7 @@ function Search(){
     // NEW: Fetch from backend instead of Spoonacular directly
     const fetchIngredients = async (recipeId) => {
       try {
-        const response = await axios.get(`https://vault-g3r4.onrender.com/api/spoonacular/ingredients`, {
+        const response = await axios.get(`${API_URL}/api/spoonacular/ingredients`, {
             params: { recipeId },
         });
     
@@ -60,7 +61,7 @@ function Search(){
       
       try {
         // NEW: Fetch from backend instead of Spoonacular directly
-        const response = await axios.get(`https://vault-g3r4.onrender.com/api/spoonacular/recipes`, {
+        const response = await axios.get(`${API_URL}/api/spoonacular/recipes`, {
           params: { query: searchQuery },
         });
         if (!response.data.results || response.data.results.length === 0) {
@@ -111,7 +112,7 @@ function Search(){
       console.log(newRecipe)
       try {
         // const response = await axios.post("http://localhost:5000/api/recipes", newRecipe);
-        const response = await axios.post("https://vault-g3r4.onrender.com/api/recipes", newRecipe);
+        const response = await axios.post(`${API_URL}/api/recipes`, newRecipe);
         if (response.status === 201) {
           setMessage(`${recipe.title} has been added successfully!`);
           // Update state to include the new recipe, add new recipe to list and mark it as added

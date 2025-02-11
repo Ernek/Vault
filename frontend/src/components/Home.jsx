@@ -8,7 +8,8 @@ function Home({ user, login, error }) {
   const [password, setPassword] = useState("");
   const [recipes, setRecipes] = useState([])
   const [validationError, setValidationError] = useState(null);
-
+  // For local development 
+  const API_URL = import.meta.env.VITE_DATABASE_URL;
   useEffect(() => {
     if (user) {
       fetchRecipes();  // Fetch recipes dynamically when user logs in
@@ -17,7 +18,7 @@ function Home({ user, login, error }) {
 
   const fetchRecipes = async () => {
     try {
-      const response = await axios.get("https://vault-g3r4.onrender.com/api/recipes");
+      const response = await axios.get(`${API_URL}/api/recipes`);
       setRecipes(response.data);
     } catch (error) {
       console.error("Error fetching recipes:", error);

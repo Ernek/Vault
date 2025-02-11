@@ -8,12 +8,13 @@ function EditRecipe({ setRecipes }) {
     const [recipe, setRecipe] = useState(null); // Initially null to handle loading state
     const [message, setMessage] = useState("");
     const [loading, setLoading] = useState(true); // Track loading state
+    const API_URL = import.meta.env.VITE_DATABASE_URL;
     // Fetch recipe details when component loads
     useEffect(() => {
         const fetchRecipe = async () => {
             try {
                 // const response = await axios.get(`http://localhost:5000/api/recipes/${id}`);
-                const response = await axios.get(`https://vault-g3r4.onrender.com/api/recipes/${id}`);
+                const response = await axios.get(`${API_URL}/api/recipes/${id}`);
                 setRecipe(response.data);
                 setLoading(false);
             } catch (error) {
@@ -41,7 +42,7 @@ function EditRecipe({ setRecipes }) {
 
         try {
             // const response = await axios.put(`http://localhost:5000/api/recipes/${id}`, recipe);
-            const response = await axios.put(`https://vault-g3r4.onrender.com/api/recipes/${id}`, recipe);
+            const response = await axios.put(`${API_URL}/api/recipes/${id}`, recipe);
 
             if (response.status === 200) {
                 setMessage("Recipe updated successfully!");

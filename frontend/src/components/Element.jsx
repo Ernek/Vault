@@ -7,10 +7,11 @@ import axios from "axios";
 import { FaTrash, FaEdit } from "react-icons/fa";  // Import FontAwesome trash icon
 
 function Element({ recipes, setRecipes }){
+    const API_URL = import.meta.env.VITE_DATABASE_URL;
     const handleDelete = async (id) => {
         try {
             // await axios.delete(`http://localhost:5000/api/recipes/${id}`); // Send DELETE request
-            await axios.delete(`https://vault-g3r4.onrender.com/api/recipes/${id}`); // Send DELETE request
+            await axios.delete(`${API_URL}/api/recipes/${id}`); // Send DELETE request
 
             // Update state to remove the deleted item from the UI
             setRecipes((prevRecipes) => prevRecipes.filter(recipe => recipe.id !== id));

@@ -14,7 +14,7 @@ function AddItem({ setRecipes }){
     const [preparationtime, setPreparationTime] = useState('');
     const [message, setMessage] = useState('');
     const [tags, setTags] = useState('');
-
+    const API_URL = import.meta.env.VITE_DATABASE_URL;
     const handleSubmit = async (e) => {
       e.preventDefault();
        // Validate inputs
@@ -35,7 +35,7 @@ function AddItem({ setRecipes }){
       try {
         const response = await axios.post(
           // `http://localhost:5000/api/recipes`, // 'recipes' endpoint
-          `https://vault-g3r4.onrender.com/api/recipes`, // 'recipes' endpoint 
+          `${API_URL}/api/recipes`, // 'recipes' endpoint 
           newItem
         );
         if (response.status === 201) {
