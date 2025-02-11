@@ -126,7 +126,7 @@ app.post('/api/login', async (req, res) => {
 const authenticateToken = (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
 
-  if (!token) return res.status(401).json({ message: "Unauthorized" });
+  if (!token) return res.status(401).json({ message: "Unauthorized: No token provided" });
 
   jwt.verify(token, SECRET_KEY, (err, user) => {
     if (err) return res.status(403).json({ message: "Invalid token" });
@@ -138,14 +138,15 @@ const authenticateToken = (req, res, next) => {
 
 app.use((req, res, next) => {
   // Allow public access only for login and register routes
-  if (["/api/login", "/api/register", "/api/recipes"].includes(req.path)) {
+  const openRoutes = ["/api/login", "/api/register"];
+  if (openRoutes.includes(req.path)) {
     return next();
   }
   authenticateToken(req, res, next);
 });
 
 // Fetch ingredients for a specific recipe from Spoonacular (Proxy route)
-app.get('/api/spoonacular/ingredients', async (req, res) => {
+app.get('/api/spoonacular/ingredients',authenticateToken, async (req, res) => {
   const { recipeId } = req.query;
   const API_KEY = process.env.SPOONACULAR_API_KEY; // Secure API Key
 
@@ -174,7 +175,7 @@ app.get('/api/spoonacular/ingredients', async (req, res) => {
 
 // ***** ROUTES ****** //
 // Fetch recipes from Spoonacular API (Proxy route)
-app.get('/api/spoonacular/recipes', async (req, res) => {
+app.get('/api/spoonacular/recipes',authenticateToken, async (req, res) => {
     const { query } = req.query;
     const API_KEY = process.env.SPOONACULAR_API_KEY; // Use environment variable
 
@@ -201,7 +202,7 @@ app.get('/api/spoonacular/recipes', async (req, res) => {
 });
 
 // Generic route to fetch all recipes
-app.get('/api/recipes', async (req, res) => {
+app.get('/api/recipes', authenticateToken, async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM recipes');
     res.json(result.rows);
@@ -211,7 +212,7 @@ app.get('/api/recipes', async (req, res) => {
   }
 });
 // Route to handle search by tags
-app.get('/api/recipes/search', async (req, res) => {
+app.get('/api/recipes/search',authenticateToken, async (req, res) => {
   const { tag } = req.query;
 
   try {
@@ -234,7 +235,7 @@ app.get('/api/recipes/search', async (req, res) => {
   }
 });
 
-app.get('/api/recipes/:id', async (req, res) => {
+app.get('/api/recipes/:id',authenticateToken, async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -252,7 +253,7 @@ app.get('/api/recipes/:id', async (req, res) => {
   }
 });
 
-app.put('/api/recipes/:id', async (req, res) => {
+app.put('/api/recipes/:id',authenticateToken, async (req, res) => {
   const { id } = req.params;
   const { name, image, ingredients, description, preparationtime, tags } = req.body;
 
@@ -278,7 +279,7 @@ app.put('/api/recipes/:id', async (req, res) => {
 });
 
 // Delete recipe route
-app.delete('/api/recipes/:id', async (req, res) => {
+app.delete('/api/recipes/:id',authenticateToken, async (req, res) => {
   let { id } = req.params;
 
   try {
@@ -309,7 +310,7 @@ app.delete('/api/recipes/:id', async (req, res) => {
 
 
 // Example endpoint to handle POST requests
-app.post('/api/recipes', async (req, res) => {
+app.post('/api/recipes',authenticateToken, async (req, res) => {
   const { name, image, ingredients, description, preparationtime, tags } = req.body;
  
   try {

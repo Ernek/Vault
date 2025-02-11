@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './App.css'
 import NavBar from "./components/NavBar.jsx";
 import Home from "./components/Home.jsx";
@@ -16,7 +16,6 @@ import axios from 'axios';
 function App() {
   const [recipes, setRecipes] = useState([]);
   const [user, setUser] = useState(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchRecipes() {
@@ -61,7 +60,6 @@ function App() {
 
       // Fetch and set user details
       setUser({ username });
-      navigate("/"); // Redirect to home
     } catch (error) {
       console.error("Login failed:", error);
     }
@@ -71,7 +69,6 @@ function App() {
     localStorage.removeItem("token");
     delete axios.defaults.headers.common["Authorization"];
     setUser(null);
-    navigate("/login"); // Redirect to login
   };
   
   return (

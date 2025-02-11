@@ -37,9 +37,13 @@ CREATE TABLE IF NOT EXISTS user_recipes (
 );
 
 -- Insert some sample data
+-- INSERT INTO users (username, password) VALUES 
+-- ('ernek', 'leo'),
+-- ('ricardo', 'concrete');
+
 INSERT INTO users (username, password) VALUES 
-('ernek', 'leo'),
-('ricardo', 'concrete');
+('ernek', '$2b$12$XJxVmPUfOqQgAd.fJZKJpu2XhZ9XWYZQmIxYeDDNdKTBoVhLxJ9iy'),
+('ricardo', '$2b$12$TnB9QXaD1XwA0OiJ43V/UO.7MqUTkG8u5hTzR6z0Xo5X3q/WShzE2');
 
 INSERT INTO recipes (name, image, ingredients, description, preparationtime, tags) VALUES
 ('Lentil Fritters', 'https://img.spoonacular.com/recipes/649921-312x231.jpg', 
