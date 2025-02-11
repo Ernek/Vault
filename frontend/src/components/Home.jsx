@@ -1,8 +1,11 @@
-import React, { useEffect, useState }  from "react";
-import { Card, CardBody, CardTitle } from "reactstrap";
+import React, { useState }  from "react";
+import { Card, CardBody, CardTitle, Button, Input } from "reactstrap";
 import '../App.css';
 
-function Home({recipes}) {
+function Home({ recipes, user, login }) {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
   return (
     <section className="full-height-section">
       <Card>
@@ -12,7 +15,27 @@ function Home({recipes}) {
               Welcome to your group's Vault!
             </h3>
           </CardTitle>
-          <p>There are {recipes.length} recipes saved for you to check!</p>
+          {!user ? (
+            <>
+              <Input
+                type="text"
+                placeholder="Username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+              <Input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <Button color="primary" onClick={() => login(username, password)}>
+                Login
+              </Button>
+            </>
+          ) : (
+            <p>Welcome, {user.username}! You have access to {recipes.length} recipes.</p>
+          )}
         </CardBody>
       </Card>
     </section>

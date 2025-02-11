@@ -138,7 +138,7 @@ const authenticateToken = (req, res, next) => {
 
 app.use((req, res, next) => {
   // Allow public access only for login and register routes
-  if (req.path === "/api/login" || req.path === "/api/register") {
+  if (["/api/login", "/api/register", "/api/recipes"].includes(req.path)) {
     return next();
   }
   authenticateToken(req, res, next);
@@ -172,7 +172,7 @@ app.get('/api/spoonacular/ingredients', async (req, res) => {
   }
 });
 
-
+// ***** ROUTES ****** //
 // Fetch recipes from Spoonacular API (Proxy route)
 app.get('/api/spoonacular/recipes', async (req, res) => {
     const { query } = req.query;
@@ -200,7 +200,7 @@ app.get('/api/spoonacular/recipes', async (req, res) => {
     }
 });
 
-
+// Generic route to fetch all recipes
 app.get('/api/recipes', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM recipes');
