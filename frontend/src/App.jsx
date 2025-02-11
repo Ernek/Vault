@@ -15,38 +15,40 @@ import axios from 'axios';
 function App() {
   const [recipes, setRecipes] = useState([]);
   const [user, setUser] = useState(null);
+  
+  const fetchRecipes = async () => {
+    if (!user) return;  // Prevent fetching when user is not authenticated
+  
+    try {
+      const response = await axios.get("https://vault-g3r4.onrender.com/api/recipes", {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+      });
+      setRecipes(response.data);
+    } catch (error) {
+      console.error("Error fetching recipes:", error);
+    }
+  };
 
-  useEffect(() => {
-    async function fetchRecipes() {
+  // ✅ Standalone function to verify user authentication
+  const verifyUser = async () => {
+    const token = localStorage.getItem("token");
+    if (token) {
       try {
-        // const response = await axios.get("http://localhost:5000/api/recipes");
-        const response = await axios.get("https://vault-g3r4.onrender.com/api/recipes");
-        setRecipes(response.data);
+        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+        const response = await axios.get("https://vault-g3r4.onrender.com/api/user");
+        setUser({ username: response.data.username });
       } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    async function verifyUser() {
-      const token = localStorage.getItem("token");
-      if (token) {
-        try {
-          // Set token globally for authenticated requests
-          axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-
-          // Fetch authenticated user details
-          const response = await axios.get("https://vault-g3r4.onrender.com/api/user");
-          setUser({ username: response.data.username });
-        } catch (error) {
-          console.error("Invalid or expired token:", error);
-          logout(); // Auto-logout on invalid token
-        }
+        console.error("Invalid or expired token:", error);
+        // logout(); // Auto-logout on invalid token
+        setUser(null)
       }
     }
+  };
 
-    // fetchRecipes();
+  // ✅ useEffect calls verifyUser() on initial render
+  useEffect(() => {
     verifyUser();
-    }, []);
+  }, []);
 
   const login = async (username, password) => {
     try {
@@ -66,6 +68,12 @@ function App() {
     }
   };
   
+  useEffect(() => {
+    if (user) {
+      fetchRecipes();
+    }
+  }, [user]);
+
   const logout = () => {
     localStorage.removeItem("token");
     delete axios.defaults.headers.common["Authorization"];

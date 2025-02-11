@@ -25,58 +25,37 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false } // Required for Supabase
 });
 
-// Create users Table if not existent
-const createUsersTable = async () => {
+// **** TABLES **** //
+// Create Tables if not existent
+const createTables = async () => {
+  const queries = [
+    `CREATE TABLE IF NOT EXISTS users (
+       id SERIAL PRIMARY KEY,
+       username TEXT UNIQUE NOT NULL,
+       password TEXT NOT NULL
+     );`,
+    `CREATE TABLE IF NOT EXISTS recipes (
+       id SERIAL PRIMARY KEY,
+       name TEXT NOT NULL,
+       image TEXT,
+       ingredients TEXT,
+       description TEXT,
+       preparationtime TEXT,
+       tags TEXT
+    );`
+  ]
   try {
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS users (
-        id SERIAL PRIMARY KEY,
-        username TEXT UNIQUE NOT NULL,
-        password TEXT NOT NULL
-      );
-    `);
+    for (const query of queries) {
+      await pool.query(query);
+    }
     console.log('Users table checked/created');
   } catch (err) {
     console.error('Error creating user tables:', err);
     throw err;
   }
 };
-// Create recipes table if it doesn't exist
-const createRecipeTable = async () => {
-  try {
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS recipes (
-        id SERIAL PRIMARY KEY,
-        name TEXT NOT NULL,
-        image TEXT,
-        ingredients TEXT,
-        description TEXT,
-        preparationtime TEXT,
-        tags TEXT
-      );
-    `);
-    console.log('Database and table checked/created');
-  } catch (err) {
-    console.error('Error creating table:', err);
-    throw err;
-  }
-};
-// Create user_recipes Table is it doesn't exist
-const createUserRecipesTable = async () => {
-  try {
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS user_recipes (
-        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-        recipe_id INTEGER REFERENCES recipes(id) ON DELETE CASCADE,
-        PRIMARY KEY (user_id, recipe_id)
-      );
-    `);
-    console.log('UserRecipes table checked/created');
-  } catch (err) {
-    console.error('Error creating user tables:', err);
-    throw err;
-  }
-};
+
+
 // *****************   ROUTES  ****************** //
 
 // User Registration
@@ -339,9 +318,7 @@ const PORT = process.env.PORT || 5000;
 const startServer = async () => {
   try {
     // Ensure tables exists 
-    await createUsersTable(); 
-    await createRecipeTable();
-    await createUserRecipesTable();
+    await createTables(); 
     app.listen(PORT, () => {
       console.log(`✅ Server running on port ${PORT}`);
     });

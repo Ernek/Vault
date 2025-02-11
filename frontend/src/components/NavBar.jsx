@@ -28,7 +28,7 @@ function NavBar({ user, logout }) {
           <NavItem>
             <NavLink to="/search">Search</NavLink>
           </NavItem>
-            // Show Logout if user is authenticated
+            {/* Show Logout if user is authenticated */}
             <NavItem>
               <Button color="danger" onClick={handleLogout}>
                 Logout
