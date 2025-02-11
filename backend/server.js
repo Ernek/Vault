@@ -3,11 +3,10 @@ const express = require("express");
 const { Pool } = require('pg');
 const cors = require("cors");
 const bodyParser = require('body-parser');
-// const sequelize = require("./config/database");
-const recipeRoutes = require("./routes/recipeRoutes");
-const Recipe = require('./models/Recipe');
-
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 require("dotenv").config();
+const SECRET_KEY = process.env.JWT_SECRET || "supersecretkey";
 
 const app = express();
 app.use(cors());
@@ -25,9 +24,41 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_SUPABASE_URL, // Use environment variable
   ssl: { rejectUnauthorized: false } // Required for Supabase
 });
+const createUsersTable = async () => {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY,
+        username TEXT UNIQUE NOT NULL,
+        password TEXT NOT NULL
+      );
+    `);
+    console.log('Users table checked/created');
+  } catch (err) {
+    console.error('Error creating user tables:', err);
+    throw err;
+  }
+};
+
+const createUserRecipesTable = async () => {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS user_recipes (
+        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+        recipe_id INTEGER REFERENCES recipes(id) ON DELETE CASCADE,
+        PRIMARY KEY (user_id, recipe_id)
+      );
+    `);
+    console.log('UserRecipes table checked/created');
+  } catch (err) {
+    console.error('Error creating user tables:', err);
+    throw err;
+  }
+};
+
 
 // Create table if it doesn't exist
-const createTable = async () => {
+const createRecipeTable = async () => {
   try {
     await pool.query(`
       CREATE TABLE IF NOT EXISTS recipes (
@@ -240,7 +271,10 @@ const PORT = process.env.PORT || 5000;
 // For use with db hosted in Supabase
 const startServer = async () => {
   try {
-    await createTable(); // Ensure table exists before listening
+    // Ensure tables exists 
+    await createUsersTable(); 
+    await createRecipeTable();
+    await createUserRecipesTable();
     app.listen(PORT, () => {
       console.log(`✅ Server running on port ${PORT}`);
     });
