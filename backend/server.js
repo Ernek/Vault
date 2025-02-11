@@ -29,14 +29,18 @@ app.use(bodyParser.json());
 const isTestEnv = process.env.NODE_ENV === 'test';
 // Pick your databaseurl:
 // If it is local set variable to not enforce ssl connections
-// DATABASE_URL for local, DATABASE_SUPABASE_URL
-const databaseurl = process.env.DATABASE_URL 
+// ****
+// DATABASE_URL for local, 
+// const databaseurl = process.env.DATABASE_URL
+// ****
+// DATABASE_SUPABASE_URL for supabase connections 
+const databaseurl = process.env.DATABASE_SUPABASE_URL 
+
 const isLocal = databaseurl?.includes("localhost") || databaseurl?.includes("127.0.0.1");
 const pool = new Pool({
   connectionString: isTestEnv
     ? process.env.TEST_DATABASE_URL
     : databaseurl,
-    // : process.env.DATABASE_SUPABASE_URL,
   ssl: isTestEnv || isLocal ? false : { rejectUnauthorized: false },
 });
 
