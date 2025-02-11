@@ -44,9 +44,6 @@ const pool = new Pool({
   ssl: isTestEnv || isLocal ? false : { rejectUnauthorized: false },
 });
 
-
-
-
 // **** TABLES **** //
 // Create Tables if not existent
 const createTables = async () => {
