@@ -22,7 +22,7 @@ function FoodElement({ recipes, setRecipes }){
 
     const handleTagSearch = async (e) => {
         e.preventDefault();
-        if (!searchTag) {
+        if (!searchTag.trim()) {
             setRecipes(allRecipes); // Reset if search is cleared
             return;
         }

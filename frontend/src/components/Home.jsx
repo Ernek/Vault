@@ -3,11 +3,12 @@ import { Card, CardBody, CardTitle, Button, Input } from "reactstrap";
 import '../App.css';
 import axios from "axios";
 
-function Home({ user, login }) {
+function Home({ user, login, error }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
   const [recipes, setRecipes] = useState([])
+  const [validationError, setValidationError] = useState(null);
+
   useEffect(() => {
     if (user) {
       fetchRecipes();  // Fetch recipes dynamically when user logs in
@@ -22,6 +23,19 @@ function Home({ user, login }) {
       console.error("Error fetching recipes:", error);
     }
   };
+
+  const handleLogin = () => {
+    // Basic frontend validation
+    if (!username.trim() || !password.trim()) {
+      setValidationError("Username and password are required");
+      return;
+    }
+
+    // Clear previous validation errors
+    setValidationError(null);
+    login(username, password);
+  };
+
   return (
     <section className="full-height-section">
       <Card>
@@ -33,6 +47,8 @@ function Home({ user, login }) {
           </CardTitle>
           {!user ? (
             <>
+             {validationError && <p style={{ color: "red" }}>{validationError}</p>}
+             {error && <p style={{ color: "red" }}>{error}</p>} {/* Display error message */}
               <Input
                 type="text"
                 placeholder="Username"

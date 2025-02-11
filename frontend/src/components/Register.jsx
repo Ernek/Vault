@@ -9,6 +9,10 @@ function Register() {
   const navigate = useNavigate();
 
   const handleRegister = async () => {
+    if (!username.trim() || !password.trim()) {
+      setError("Username and password are required.");
+      return;
+    }
     try {
     //   await axios.post("http://localhost:5000/api/register", { username, password });
       await axios.post("https://vault-g3r4.onrender.com/api/register", { username, password });

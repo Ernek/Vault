@@ -15,6 +15,7 @@ import axios from 'axios';
 function App() {
   const [recipes, setRecipes] = useState([]);
   const [user, setUser] = useState(null);
+  const [error, setError] = useState(null);
   
   const fetchRecipes = async () => {
     if (!user) return;  // Prevent fetching when user is not authenticated
@@ -63,8 +64,14 @@ function App() {
       setUser({ username });
       // Fetch recipes again after login
       fetchRecipes();
+      setError(null); // Clear error if login is successful
     } catch (error) {
+      if (error.response) {
+        setError(error.response.data.message || "Login failed");
+      } else {
       console.error("Login failed:", error);
+      setError("An error ocurred. Please try again."); // Set error message
+      }
     }
   };
   
@@ -86,7 +93,7 @@ function App() {
       <NavBar user={user} logout={logout} />
       <main>
         <Routes>
-          <Route path="/" element={<Home user={user} login={login} />} />
+          <Route path="/" element={<Home user={user} login={login} error={error}/>} />
           <Route path="/register" element={<Register />} />
           <Route path="/food" element={<FoodElement recipes={recipes} setRecipes={setRecipes} />} />
           <Route path="/food/:id" element={<Item items={recipes} cantFind="/food" />} />

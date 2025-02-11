@@ -61,7 +61,10 @@ const createTables = async () => {
 // User Registration
 app.post('/api/register', async (req, res) => {
   const { username, password } = req.body;
-
+  // Validate empty fields
+  if (!username || !password) {
+    return res.status(400).json({ message: "Username and password are required" });
+  }
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
     const query = 'INSERT INTO users (username, password) VALUES ($1, $2) RETURNING id, username';
@@ -78,6 +81,10 @@ app.post('/api/register', async (req, res) => {
 // User Login
 app.post('/api/login', async (req, res) => {
   const { username, password } = req.body;
+  // Validate empty fields
+  if (!username || !password) {
+    return res.status(400).json({ message: "Username and password are required" });
+  }
 
   try {
     const result = await pool.query('SELECT * FROM users WHERE username = $1', [username]);

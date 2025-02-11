@@ -34,6 +34,11 @@ function EditRecipe({ setRecipes }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        if (!recipe.name.trim()) {
+            setMessage("Recipe name is required.");
+            return;
+        }
+
         try {
             // const response = await axios.put(`http://localhost:5000/api/recipes/${id}`, recipe);
             const response = await axios.put(`https://vault-g3r4.onrender.com/api/recipes/${id}`, recipe);

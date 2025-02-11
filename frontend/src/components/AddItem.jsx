@@ -18,7 +18,7 @@ function AddItem({ setRecipes }){
     const handleSubmit = async (e) => {
       e.preventDefault();
        // Validate inputs
-      if (!name) {
+      if (!name.trim()) {
           setMessage('Please fill out at least the name of the recipe.');
           return;
       }   
