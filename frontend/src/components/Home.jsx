@@ -1,11 +1,27 @@
-import React, { useState }  from "react";
+import React, { useState, useEffect }  from "react";
 import { Card, CardBody, CardTitle, Button, Input } from "reactstrap";
 import '../App.css';
+import axios from "axios";
 
-function Home({ recipes, user, login }) {
+function Home({ user, login }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
+  const [recipes, setRecipes] = useState([])
+  useEffect(() => {
+    if (user) {
+      fetchRecipes();  // Fetch recipes dynamically when user logs in
+    }
+  }, [user]);
 
+  const fetchRecipes = async () => {
+    try {
+      const response = await axios.get("https://vault-g3r4.onrender.com/api/recipes");
+      setRecipes(response.data);
+    } catch (error) {
+      console.error("Error fetching recipes:", error);
+    }
+  };
   return (
     <section className="full-height-section">
       <Card>

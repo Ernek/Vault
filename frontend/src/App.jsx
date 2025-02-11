@@ -4,7 +4,6 @@ import './App.css'
 import NavBar from "./components/NavBar.jsx";
 import Home from "./components/Home.jsx";
 import Register from "./components/Register.jsx"; // Import Register Page
-import Login from "./components/Login.jsx"; // Import Login Page
 import FoodElement from './components/FoodElement.jsx';
 import EditRecipe from './components/EditRecipe.jsx';
 import Item from "./components/Item.jsx";
@@ -45,7 +44,7 @@ function App() {
       }
     }
 
-    fetchRecipes();
+    // fetchRecipes();
     verifyUser();
     }, []);
 
@@ -60,6 +59,8 @@ function App() {
 
       // Fetch and set user details
       setUser({ username });
+      // Fetch recipes again after login
+      fetchRecipes();
     } catch (error) {
       console.error("Login failed:", error);
     }
@@ -77,9 +78,8 @@ function App() {
       <NavBar user={user} logout={logout} />
       <main>
         <Routes>
-          <Route path="/" element={<Home recipes={recipes} user={user} login={login} />} />
+          <Route path="/" element={<Home user={user} login={login} />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login login={login} />} />
           <Route path="/food" element={<FoodElement recipes={recipes} setRecipes={setRecipes} />} />
           <Route path="/food/:id" element={<Item items={recipes} cantFind="/food" />} />
           <Route path="/edit-recipe/:id" element={<EditRecipe setRecipes={setRecipes} />} />

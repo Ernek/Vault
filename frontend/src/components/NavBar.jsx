@@ -7,7 +7,7 @@ function NavBar({ user, logout }) {
   const navigate = useNavigate();
   const handleLogout = () => {
     logout();
-    navigate("/login");
+    navigate("/");
   };
   return (
     <div>
@@ -17,6 +17,8 @@ function NavBar({ user, logout }) {
         </NavLink>
 
         <Nav className="ml-auto" navbar>
+        {user ? (
+          <>
           <NavItem>
             <NavLink to="/food">Our Recipes</NavLink>
           </NavItem>
@@ -26,24 +28,19 @@ function NavBar({ user, logout }) {
           <NavItem>
             <NavLink to="/search">Search</NavLink>
           </NavItem>
-
-         {/* Show Register/Login if user is NOT authenticated */}
-         {!user ? (
-            <>
-              <NavItem>
-                <NavLink to="/register">Register</NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink to="/login">Login</NavLink>
-              </NavItem>
-            </>
-          ) : (
             // Show Logout if user is authenticated
             <NavItem>
               <Button color="danger" onClick={handleLogout}>
                 Logout
               </Button>
             </NavItem>
+          </>
+          ) : (
+            <>
+              <NavItem>
+                <NavLink to="/register">Register</NavLink>
+              </NavItem>
+            </>
           )}
         </Nav>
       </Navbar>
