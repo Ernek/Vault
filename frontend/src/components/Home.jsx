@@ -9,7 +9,9 @@ function Home({ user, login, error }) {
   const [recipes, setRecipes] = useState([])
   const [validationError, setValidationError] = useState(null);
   // For local development 
-  const API_URL = import.meta.env.VITE_DATABASE_URL;
+  // const API_URL = import.meta.env.VITE_DATABASE_URL;
+  // For deployment
+  const API_URL = import.meta.env.VITE_RENDER_API_URL;
   useEffect(() => {
     if (user) {
       fetchRecipes();  // Fetch recipes dynamically when user logs in

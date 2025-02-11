@@ -14,7 +14,10 @@ function AddItem({ setRecipes }){
     const [preparationtime, setPreparationTime] = useState('');
     const [message, setMessage] = useState('');
     const [tags, setTags] = useState('');
-    const API_URL = import.meta.env.VITE_DATABASE_URL;
+    // For local development 
+    // const API_URL = import.meta.env.VITE_DATABASE_URL;
+    // For deployment
+    const API_URL = import.meta.env.VITE_RENDER_API_URL;
     const handleSubmit = async (e) => {
       e.preventDefault();
        // Validate inputs

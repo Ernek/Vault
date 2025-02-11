@@ -8,7 +8,10 @@ function EditRecipe({ setRecipes }) {
     const [recipe, setRecipe] = useState(null); // Initially null to handle loading state
     const [message, setMessage] = useState("");
     const [loading, setLoading] = useState(true); // Track loading state
-    const API_URL = import.meta.env.VITE_DATABASE_URL;
+    // For local development
+    // const API_URL = import.meta.env.VITE_DATABASE_URL;
+    // For deployment
+    const API_URL = import.meta.env.VITE_RENDER_API_URL;
     // Fetch recipe details when component loads
     useEffect(() => {
         const fetchRecipe = async () => {

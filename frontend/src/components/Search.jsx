@@ -13,7 +13,9 @@ function Search(){
     const [message, setMessage] = useState('');
     const [addedRecipes, setAddedRecipes] = useState([]);
     // For local development 
-    const API_URL = import.meta.env.VITE_DATABASE_URL;
+    // const API_URL = import.meta.env.VITE_DATABASE_URL;
+    // For deployment
+    const API_URL = import.meta.env.VITE_RENDER_API_URL;
     const placeholderText = "Search recipe by type of food, or comma separated ingredients"; // Placeholder text
     
     // Fetch existing recipes from the database when the component mounts

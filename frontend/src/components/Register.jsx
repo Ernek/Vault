@@ -7,7 +7,10 @@ function Register() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  const API_URL = import.meta.env.VITE_DATABASE_URL;
+  // For local development 
+  // const API_URL = import.meta.env.VITE_DATABASE_URL;
+  // For deployment
+  const API_URL = import.meta.env.VITE_RENDER_API_URL;
   const handleRegister = async () => {
     if (!username.trim() || !password.trim()) {
       setError("Username and password are required.");

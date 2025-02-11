@@ -5,7 +5,10 @@ import axios from "axios"
 function FoodElement({ recipes, setRecipes }){
     const [searchTag, setSearchTag] = useState('');
     const [allRecipes, setAllRecipes] = useState([]); // Store all recipes for resetting
-    const API_URL = import.meta.env.VITE_DATABASE_URL;
+    // For local development 
+    // const API_URL = import.meta.env.VITE_DATABASE_URL;
+    // For deployment
+    const API_URL = import.meta.env.VITE_RENDER_API_URL;
     useEffect(() => {
         const fetchRecipes = async () => {
             try {

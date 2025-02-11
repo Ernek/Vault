@@ -17,7 +17,10 @@ function App() {
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
   // For local development 
-  const API_URL = import.meta.env.VITE_DATABASE_URL;
+  // const API_URL = import.meta.env.VITE_DATABASE_URL;
+
+  // For deployment
+  const API_URL = import.meta.env.VITE_RENDER_API_URL;
 
   const fetchRecipes = async () => {
     if (!user) return;  // Prevent fetching when user is not authenticated
